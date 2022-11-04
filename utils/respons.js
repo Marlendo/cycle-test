@@ -1,4 +1,9 @@
-const success = (res, { data = null, meta = null, message = "Success" }) => {
+const { setCache } = require("./cache");
+
+const success = (res, { data = null, meta = null, message = "Success" }, cacheId = false) => {
+  if (cacheId && data) {
+    setCache(cacheId, data);
+  }
   return res.json({
     success: true,
     data,
