@@ -11,6 +11,7 @@ module.exports = (sequelize) => {
      */
     static associate(models) {
       // Model associations
+      this.hasMany(models.clinic_operations);
       this.belongsTo(models.provinces);
       this.belongsTo(models.regencies, {
         sourceKey: 'regency_id',

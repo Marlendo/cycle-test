@@ -9,7 +9,7 @@ const {
   enumBodyRequired,
 } = require("../utils/required");
 const { success, failed } = require("../utils/respons");
-const enumHari = require("../constant/enumHari.json");
+const enumPromoType = require("../constant/enumPromoType.json");
 
 router.get("/", cacheQuery("clinic"), async (req, res) => {
   try {
@@ -40,25 +40,6 @@ router.post("/", async (req, res) => {
       "longitude",
     ]);
     let result = await Clinic.createClinic(req.body);
-    success(res, result);
-  } catch (error) {
-    console.error(error);
-    failed(res, {
-      message: error.message,
-    });
-  }
-});
-
-router.post("/operations", async (req, res) => {
-  try {
-    bodyRequired(req, [
-      "clinicId",
-      "day",
-      "openAt",
-      "closeAt",
-    ]);
-    enumBodyRequired(req, 'day', enumHari);
-    let result = await Clinic.createClinicOperations(req.body);
     success(res, result);
   } catch (error) {
     console.error(error);

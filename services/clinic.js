@@ -4,7 +4,11 @@ const { deleteCache } = require("../utils/cache");
 const { enumBodyRequired } = require("../utils/required");
 
 class Clinic {
-  static async listClinic({ keyword = "", regencieId = false, districId = false }) {
+  static async listClinic({
+    keyword = "",
+    regencieId = false,
+    districId = false,
+  }) {
     let query = {};
     if (keyword) {
       query.name = {
@@ -20,25 +24,34 @@ class Clinic {
     let result = await models.clinics.findAll({
       where: query,
       attributes: {
-        exclude: ['provinceId', 'districId', 'regencieId', 'vilageId']
+        exclude: ["provinceId", "districId", "regencieId", "vilageId"],
       },
-      include: [{
-        model: models.provinces,
-        required: false,
-        attributes: ['id', 'name']
-      }, {
-        model: models.regencies,
-        required: false,
-        attributes: ['id', 'name']
-      }, {
-        model: models.districts,
-        required: false,
-        attributes: ['id', 'name']
-      }, {
-        model: models.villages,
-        required: false,
-        attributes: ['id', 'name']
-      }]
+      include: [
+        {
+          model: models.clinic_operations,
+          required: false,
+        },
+        {
+          model: models.provinces,
+          required: false,
+          attributes: ["id", "name"],
+        },
+        {
+          model: models.regencies,
+          required: false,
+          attributes: ["id", "name"],
+        },
+        {
+          model: models.districts,
+          required: false,
+          attributes: ["id", "name"],
+        },
+        {
+          model: models.villages,
+          required: false,
+          attributes: ["id", "name"],
+        },
+      ],
     });
     return {
       data: result,
@@ -86,6 +99,42 @@ class Clinic {
       latitude,
       longitude,
     });
+    return { data: result };
+  }
+
+  static async createClinicOperations({ clinicId, day, openAt, closeAt }) {
+    let clinicExist = await models.clinics.findOne({
+      where: {
+        id: clinicId,
+      },
+    });
+    if (!clinicExist) {
+      throw {
+        message: "Clinic Not Found",
+      };
+    }
+
+    let clinicOperationsExist = await models.clinic_operations.findOne({
+      where: {
+        clinicId,
+        day
+      },
+    });
+
+    if (clinicOperationsExist) {
+      throw {
+        message: "Clinic Operations Already Exist",
+      };
+    }
+
+    let result = await models.clinic_operations.create({
+      clinicId,
+      day,
+      openAt,
+      closeAt,
+    });
+    deleteCache("clinic");
+    
     return { data: result };
   }
 }
