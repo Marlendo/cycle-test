@@ -9,6 +9,17 @@ const queryRequired = (req, keys = []) => {
     }
 };
 
+const bodyRequired = (req, keys = []) => {
+    for (let key of keys) {
+        if (!req.body[key]) {
+            throw {
+                message: `${key} required`
+              }
+        }
+    }
+};
+
 module.exports = {
-    queryRequired
+    queryRequired,
+    bodyRequired
 };

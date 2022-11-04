@@ -12,7 +12,8 @@ module.exports = (sequelize) => {
      */
     static associate(models) {
       // Model associations
-      this.belongsTo(models.provinces)
+      this.belongsTo(models.provinces);
+      this.hasOne(models.zones);
     }
   };
   Regional.init({
