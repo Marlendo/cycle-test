@@ -11,9 +11,9 @@ module.exports = (sequelize) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // Model associations
-      this.belongsTo(models.provinces);
-      this.hasOne(models.zones);
+      //// WARNING BUG FROM SEQUELIZE & MYSQL MUST DISABLE WHEN FIRST ALTER TABLE TABLE
+      this.belongsTo(models.provinces); // THIS
+      this.hasOne(models.zones); // THIS
     }
   };
   Regional.init({
@@ -25,10 +25,10 @@ module.exports = (sequelize) => {
     provinceId: {
       type: DataTypes.INTEGER,
       field: 'province_id',
-      references: {
-        model: 'provinces',
-        key: 'id'
-      }
+      references: { // THIS
+        model: 'provinces', // THIS
+        key: 'id' // THIS
+      } // THIS
     },
     name: {
       type: DataTypes.STRING
@@ -36,6 +36,7 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     paranoid: true,
+    underscored: true,
     modelName: 'regionals',
   });
   return Regional;

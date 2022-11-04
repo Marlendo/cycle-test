@@ -7,9 +7,7 @@ const cacheQuery = cacheId => {
     let newCacheId = `${cacheId}_${Buffer.from(JSON.stringify(mapSafe(() => req.query, ''))).toString("base64")}`;
     let data = getCache(newCacheId);
     if (data) {
-      return success(res, {
-        data
-      }) 
+      return success(res, data); 
     }
     req.cacheId = newCacheId;
     return next();

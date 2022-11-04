@@ -35,6 +35,7 @@ module.exports = (sequelize) => {
   }, {
     sequelize,
     paranoid: true,
+    underscored: true,
     modelName: 'zones',
   });
   return Zone;

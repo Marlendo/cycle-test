@@ -2,7 +2,10 @@ const { setCache } = require("./cache");
 
 const success = (res, { data = null, meta = null, message = "Success" }, cacheId = false) => {
   if (cacheId && data) {
-    setCache(cacheId, data);
+    setCache(cacheId, {
+      data,
+      meta
+    });
   }
   return res.json({
     success: true,
