@@ -31,7 +31,15 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-sequelize.sync();
+sequelize.sync({ force: false });
+// sequelize
+// .authenticate()
+// .then(() => {
+//   logger.info('Connected to the database');
+//   logger.info(env)
+// })
+// .catch(err => console.log(err));
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
