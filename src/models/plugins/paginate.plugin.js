@@ -20,6 +20,11 @@ const paginate = (schema) => {
    * @returns {Promise<QueryResult>}
    */
   schema.statics.paginate = async function (filter, options) {
+
+    console.log({
+      filter, options
+    })
+
     let sort = '';
     if (options.sortBy) {
       const sortingCriteria = [];
@@ -37,7 +42,12 @@ const paginate = (schema) => {
     const skip = (page - 1) * limit;
 
     const countPromise = this.countDocuments(filter).exec();
-    let docsPromise = this.find(filter).sort(sort).skip(skip).limit(limit);
+    let finder = {...filter};
+    if (filter && filter.keyword) {
+      finder['$text'] = { $search: filter.keyword };
+      delete finder.keyword;
+    }
+    let docsPromise = this.find(finder).sort(sort).skip(skip).limit(limit);
 
     if (options.populate) {
       options.populate.split(',').forEach((populateOption) => {
@@ -53,14 +63,14 @@ const paginate = (schema) => {
     docsPromise = docsPromise.exec();
 
     return Promise.all([countPromise, docsPromise]).then((values) => {
-      const [totalResults, results] = values;
-      const totalPages = Math.ceil(totalResults / limit);
+      const [total, data] = values;
       const result = {
-        results,
-        page,
-        limit,
-        totalPages,
-        totalResults,
+        data,
+        meta: {
+          page,
+          limit,
+          total,
+        }
       };
       return Promise.resolve(result);
     });
