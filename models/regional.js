@@ -4,7 +4,7 @@ const {
   DataTypes
 } = require('sequelize');
 module.exports = (sequelize) => {
-  class District extends Model {
+  class Regional extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,30 +12,30 @@ module.exports = (sequelize) => {
      */
     static associate(models) {
       // Model associations
-      this.belongsTo(models.regencies);
+      this.belongsTo(models.provinces)
     }
   };
-  District.init({
+  Regional.init({
     id: {
       autoIncrement: true,
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    regencyId: {
+    provinceId: {
       type: DataTypes.INTEGER,
-      field: 'regency_id',
+      field: 'province_id',
       references: {
-        model: 'regencies',
+        model: 'provinces',
         key: 'id'
       }
     },
     name: {
       type: DataTypes.STRING
-    }
+    },
   }, {
     sequelize,
-    timestamps: false,
-    modelName: 'districts',
+    paranoid: true,
+    modelName: 'regionals',
   });
-  return District;
+  return Regional;
 };

@@ -2,8 +2,8 @@ const users = require('./users');
 const location = require('./location');
 
 module.exports = (app) => {
-  app.use('/users', users);
-  app.use('/location', location);
+  app.use('/v1/users', users);
+  app.use('/v1/location', location);
 
   return app;
 }

@@ -21,8 +21,9 @@ module.exports = (sequelize) => {
       primaryKey: true,
       type: DataTypes.INTEGER,      
     },
-    province_id: {
+    provinceId: {
       type: DataTypes.INTEGER,
+      field: 'province_id',
       references: {
         model: 'provinces',
         key: 'id'
@@ -33,6 +34,7 @@ module.exports = (sequelize) => {
     }
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'regencies',
   });
   return Regencie;

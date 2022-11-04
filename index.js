@@ -4,7 +4,7 @@ const morgan = require('morgan');
 const path = require('path')
 const rfs = require('rotating-file-stream') // version 2.x
 require('dotenv').config();
-const routes = require('./routes');
+const routesV1 = require('./routes/route.v1');
 
 const app = express();
 const port = process.env.PORT;
@@ -25,7 +25,7 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 /* app.use('/patients', routes.makes);
 app.use('/users', routes.users); */
-routes(app);
+routesV1(app);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)

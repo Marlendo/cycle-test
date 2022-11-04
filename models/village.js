@@ -21,7 +21,8 @@ module.exports = (sequelize) => {
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    district_id: {
+    districtId: {
+      field: 'district_id',
       type: DataTypes.INTEGER,
       references: {
         model: 'districts',
@@ -33,6 +34,7 @@ module.exports = (sequelize) => {
     }
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'villages',
   });
   return Village;
