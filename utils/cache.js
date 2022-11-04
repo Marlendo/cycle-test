@@ -18,7 +18,21 @@ const setCache = (cacheId, data) => {
   }
 };
 
+const deleteCache = (cacheSlug) => {
+  try {
+    let keys = cache.keys();
+    let search = new RegExp(cacheSlug , 'i'); // prepare a regex object
+    let keysDeleted = keys.filter(item => search.test(item));
+    if (keysDeleted && keysDeleted.length > 0) {
+      cache.del(keysDeleted);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 module.exports = {
   getCache,
-  setCache
+  setCache,
+  deleteCache
 };

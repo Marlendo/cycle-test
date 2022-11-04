@@ -1,7 +1,7 @@
 
 const queryRequired = (req, keys = []) => {
     for (let key of keys) {
-        if (!req.query[key]) {
+        if (typeof req.query[key] === 'undefined') {
             throw {
                 message: `${key} required`
               }
@@ -11,7 +11,7 @@ const queryRequired = (req, keys = []) => {
 
 const bodyRequired = (req, keys = []) => {
     for (let key of keys) {
-        if (!req.body[key]) {
+        if (typeof req.body[key] === 'undefined') {
             throw {
                 message: `${key} required`
               }

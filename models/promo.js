@@ -41,6 +41,10 @@ module.exports = (sequelize) => {
       imageUrl: {
         type: DataTypes.STRING,
       },
+      highlight: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       sequelize,

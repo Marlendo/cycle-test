@@ -1,15 +1,16 @@
 const { setCache } = require("./cache");
+const { copyObj } = require("./safe");
 
 const success = (res, { data = null, meta = null, message = "Success" }, cacheId = false) => {
   if (cacheId && data) {
     setCache(cacheId, {
-      data,
+      data: copyObj(data),
       meta
     });
   }
   return res.json({
     success: true,
-    data,
+    data: data ? data : null,
     meta,
     message,
   });

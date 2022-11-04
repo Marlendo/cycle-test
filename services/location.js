@@ -17,7 +17,7 @@ class Location {
     let lowerLevelGeocode = provinceName;
     if (lat && long) {
       let reverseGeocode = await geocoder.reverse({ lat: Number(lat), lon: Number(long) });
-      lowerLevelGeocode = mapSafe(() => reverseGeocode[0].administrativeLevels.level4short, reverseGeocode);
+      lowerLevelGeocode = mapSafe(() => reverseGeocode[0].administrativeLevels.level4short.split(' ')[0], reverseGeocode);
     }
     if (!lowerLevelGeocode) {
       throw {
@@ -43,6 +43,7 @@ class Location {
         }
       }
     })
+    
     let province = mapSafe(() => rawResult.district.regency.province, false);
     if (!province.id) {
       throw {

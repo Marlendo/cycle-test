@@ -27,7 +27,7 @@ module.exports = (sequelize) => {
       field: 'province_id',
       references: { // THIS
         model: 'provinces', // THIS
-        key: 'id' // THIS
+        key: 'id', // THIS
       } // THIS
     },
     name: {

@@ -6,6 +6,16 @@ const mapSafe = (fn, defaultVal) => {
   }
 };
 
+const copyObj = (obj) => {
+  try {
+    return JSON.parse(JSON.stringify(obj));
+  } catch (error) {
+    console.error(error);
+    return obj;
+  }
+}
+
 module.exports = {
-  mapSafe
+  mapSafe,
+  copyObj
 };

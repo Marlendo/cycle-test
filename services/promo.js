@@ -1,6 +1,6 @@
 const models = require('../models');
 const { Op } = require('sequelize');
-
+const { deleteCache } = require('../utils/cache');
 
 class Location {
   static async listPromo({
@@ -37,39 +37,109 @@ class Location {
     return result
   }
 
-  static async createPromo({regionalId, zoneName}) {
-    let regionalIdExist = await models.regionals.findOne({
+  static async listPromoHighlight({
+    zoneId,
+  }) {
+    let result = await models.promotions.findAll({
       where: {
-        id: regionalId
-      },
-    })
-    if (!regionalIdExist) {
-      throw {
-        message: 'Regional ID Not Exist'
-      }
-    }
-    let exist = await models.zones.findOne({
-      where: {
-          [Op.or]: [{
-            name: zoneName
-          }, {
-            regionalId
-          }]
+        zoneId,
+        highlight: true
       }
     });
+    return {
+      data: result
+    }
+  }
 
-    if (exist) {
+  static async createPromo({
+    zoneId,
+    name,
+    description,
+    imageUrl,
+    type,
+    highlight = false
+  }) {
+    let promoExist = await models.promotions.findOne({
+      where: {
+        zoneId,
+        name
+      },
+    })
+
+    if (promoExist){
       throw {
-        message: 'Zone Already Exist'
+        message: 'Promo Already Exist'
       }
     }
 
-    let result = await models.zones.create({
-      regionalId,
-      name: zoneName.toUpperCase(),
+    let result = await models.promotions.create({
+      zoneId,
+      name,
+      type,
+      description,
+      imageUrl,
+      highlight
+    });
+
+    deleteCache('promo');
+
+    return {
+      data: result
+    };
+  }
+
+  static async editPromo({
+    id,
+    highlight,
+    zoneId = null,
+    name = null,
+    description = null,
+    imageUrl = null,
+    type = null,
+  }) {
+    let promoExist = await models.promotions.findOne({
+      where: {
+        id
+      },
     })
 
-    return result;
+    if (!promoExist){
+      throw {
+        message: 'Promo Not Found'
+      }
+    }
+
+    let payload = {
+      highlight
+    }
+
+    if (zoneId) {
+      payload.zoneId = zoneId;
+    }
+
+    if (name) {
+      payload.name = name;
+    }
+
+    if (description) {
+      payload.description = description;
+    }
+
+    if (imageUrl) {
+      payload.imageUrl = imageUrl;
+    }
+
+    if (type) {
+      payload.type = type;
+    }
+
+    let result = await promoExist.update(payload);
+
+    deleteCache('promo');
+
+    return {
+      data: result
+    };
   }
 }
 
