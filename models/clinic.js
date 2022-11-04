@@ -1,6 +1,5 @@
 "use strict";
 const { Model, DataTypes } = require("sequelize");
-const enumPromoType = require("../constant/enumPromoType.json");
 
 module.exports = (sequelize) => {
   class Clinic extends Model {

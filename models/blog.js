@@ -1,9 +1,8 @@
 "use strict";
 const { Model, DataTypes } = require("sequelize");
-const enumHari = require("../constant/enumHari.json");
 
 module.exports = (sequelize) => {
-  class ClinicOperation extends Model {
+  class Blog extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -12,38 +11,43 @@ module.exports = (sequelize) => {
     static associate(models) {
       // Model associations
       
-      this.belongsTo(models.clinics);
+      this.belongsTo(models.category_blogs);
     }
   }
-  ClinicOperation.init(
+  Blog.init(
     {
       id: {
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      clinicId: {
+      categoryId: {
         type: DataTypes.INTEGER,
-        field: 'clinic_id',
+        field: 'category_id'
       },
-      day: {
-        type: DataTypes.ENUM(enumHari),
+      slug: {
+        type: DataTypes.STRING,
       },
-      openAt: {
-        field: 'open_at',
-        type: DataTypes.TIME
+      title: {
+        type: DataTypes.STRING,
       },
-      closeAt: {
-        field: 'close_at',
-        type: DataTypes.TIME
+      subtitle: {
+        type: DataTypes.STRING,
+      },
+      imageUrl: {
+        type: DataTypes.STRING,
+        field: 'image_url'
+      },
+      content: {
+        type: DataTypes.TEXT
       }
     },
     {
       sequelize,
       paranoid: true,
       underscored: true,
-      modelName: "clinic_operations",
+      modelName: "blogs",
     }
   );
-  return ClinicOperation;
+  return Blog;
 };

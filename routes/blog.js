@@ -1,7 +1,7 @@
 const express = require("express");
 const { cacheQuery } = require("../middlewares/cache");
 const router = express.Router();
-const Clinic = require("../services/clinic");
+const Blog = require("../services/blog");
 const {
   enumQueryRequired,
   queryRequired,
@@ -11,11 +11,56 @@ const {
 const { success, failed } = require("../utils/respons");
 const enumPromoType = require("../constant/enumPromoType.json");
 
-router.get("/", cacheQuery("clinic"), async (req, res) => {
+router.get("/", cacheQuery("blogs"), async (req, res) => {
   try {
-    queryRequired(req, ['districId']);
-    let result = await Clinic.listClinic(req.query);
+    queryRequired(req, ["categoryId"]);
+    let result = await Blog.listBlog(req.query);
     success(res, result, req.cacheId);
+  } catch (error) {
+    console.error(error);
+    failed(res, {
+      message: error.message,
+    });
+  }
+});
+
+router.post("/", async (req, res) => {
+  try {
+    bodyRequired(req, [
+      "categoryId",
+      "slug",
+      "title",
+      "subtitle",
+      "imageUrl",
+      "content",
+    ]);
+    let result = await Blog.createBlog(req.body);
+    success(res, result);
+  } catch (error) {
+    console.error(error);
+    failed(res, {
+      message: error.message,
+    });
+  }
+});
+
+router.get("/category", cacheQuery("category-blogs"), async (req, res) => {
+  try {
+    let result = await Blog.listBlogCategory();
+    success(res, result, req.cacheId);
+  } catch (error) {
+    console.error(error);
+    failed(res, {
+      message: error.message,
+    });
+  }
+});
+
+router.post("/category", async (req, res) => {
+  try {
+    bodyRequired(req, ["name", "slug"]);
+    let result = await Blog.createBlogCategory(req.body);
+    success(res, result);
   } catch (error) {
     console.error(error);
     failed(res, {
